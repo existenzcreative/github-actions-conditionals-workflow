@@ -68,7 +68,9 @@ jobs:
           path: dist
   deploy:
     needs: build
-    uses: /07-conditionals-in-workflows/.github/workflows/reusable.yml
+    uses: github-actions-conditionals-workflow/.github/workflows/reusable.yml
+      with:
+        artifact-name: dist-files
   report:
     needs: [lint, deploy]
     if: failure()
