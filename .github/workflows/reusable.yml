@@ -1,35 +1,30 @@
 name: Reusable Deploy
 on:
     workflow_call:
-        inputs:
-            artifact-name:
-                description: The name of the deployable artifact files
-                required: false
-                default: dist
-                type: string
-        outputs:
-            result:
-                description: The result of the deploy step
-                value: ${{ jobs.deploy.outputs.outcome }}
-                required: true
-                type: string
-            #secrets:
-            #    some-secret:
-            #        description: A secret to use in the workflow
-            #        required: false
-            #        type: string
+    inputs:
+        artifact-name:
+        description: The name of the deployable artifact files
+        required: false
+        default: dist
+        type: string
+    outputs:
+        result:
+        description: The result of the deploy step
+        value: ${{ jobs.deploy.outputs.outcome }}
+        required: true
+        type: string
 jobs:
     deploy:
-        output:
-            outcome: ${{ steps.set-result.outputs.step-result}}
-        runs-on: ubuntu-latest
-        steps:
-            - name: Get Code
-              uses: actions/download-artifact@v3
-              with:
-                name: ${{ inputs.artifact-name }} # using context object
-            - name: List files
-              run: ls -R
-            - name: Output information
-              run: echo "Deploying & uploading..."
-            - name: echo "step-result=sucess" >> $GITHUB_OUTPUT
+    output:
+        outcome: ${{ steps.set-result.outputs.step-result}}
+    runs-on: ubuntu-latest
+    steps:
+        - name: Get Code
+        uses: actions/download-artifact@v3
+        with:
+            name: ${{ inputs.artifact-name }}
+        - name: List files
+        run: ls -R
+        - name: Output information
+        run: echo "Deploying & uploading..."
+        - name: echo "step-result=sucess" >> $GITHUB_OUTPUT
