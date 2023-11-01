@@ -35,7 +35,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Test code
-        continue-on-error: true #Continue to upload test report even if tests fail
+        id: run-tests
         run: npm run test
       - name: Upload test report
         if: failure() && steps.run-tests.outcome == 'failure'
@@ -71,14 +71,14 @@ jobs:
     uses: ./.github/workflows/reusable.yml
     with:
       artifact-name: dist-files
-    # secrets: #using secret from resuablle.yml
-    #  some-secret: ${{ secrets.SOME_SECRET }}
+    # secrets:
+      # some-secret: ${{ secrets.some-secret }}
   print-deploy-result:
     needs: deploy
     runs-on: ubuntu-latest
     steps:
       - name: Print deploy output
-        run: echo "${{ needs.deploy.outputs }}"
+        run: echo "${{ needs.deploy.outputs.result }}"
   report:
     needs: [lint, deploy]
     if: failure()
@@ -87,4 +87,4 @@ jobs:
       - name: Output information
         run: |
           echo "Something went wrong"
-          echo "${{ toJson(github) }}"
+          echo "${{ toJSON(github) }}"

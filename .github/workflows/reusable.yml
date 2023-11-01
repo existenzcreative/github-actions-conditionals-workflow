@@ -1,30 +1,33 @@
 name: Reusable Deploy
-on:
-    workflow_call:
+on: 
+  workflow_call:
     inputs:
-        artifact-name:
+      artifact-name:
         description: The name of the deployable artifact files
         required: false
         default: dist
         type: string
     outputs:
-        result:
-        description: The result of the deploy step
+      result:
+        description: The result of the deployment operation
         value: ${{ jobs.deploy.outputs.outcome }}
-        required: true
-        type: string
+    # secrets:
+      # some-secret:
+        # required: false
 jobs:
-    deploy:
-    output:
-        outcome: ${{ steps.set-result.outputs.step-result}}
+  deploy:
+    outputs:
+      outcome: ${{ steps.set-result.outputs.step-result }}
     runs-on: ubuntu-latest
     steps:
-        - name: Get Code
+      - name: Get Code
         uses: actions/download-artifact@v3
         with:
-            name: ${{ inputs.artifact-name }}
-        - name: List files
-        run: ls -R
-        - name: Output information
+          name: ${{ inputs.artifact-name }}
+      - name: List files
+        run: ls
+      - name: Output information
         run: echo "Deploying & uploading..."
-        - name: echo "step-result=sucess" >> $GITHUB_OUTPUT
+      - name: Set result output
+        id: set-result
+        run: echo "step-result=success" >> $GITHUB_OUTPUT
